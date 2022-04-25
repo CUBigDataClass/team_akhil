@@ -1,0 +1,15 @@
+README.md
+setup.py
+food_extractor/__init__.py
+food_extractor/data_utils.py
+food_extractor/eval_utils.py
+food_extractor/food_model.py
+food_extractor/train.py
+food_extractor.egg-info/PKG-INFO
+food_extractor.egg-info/SOURCES.txt
+food_extractor.egg-info/dependency_links.txt
+food_extractor.egg-info/top_level.txt
+test/__init__.py
+test/test_extraction.py
+test/test_preprocessing.py
+test/test_training_and_eval.py
