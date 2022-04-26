@@ -51,14 +51,14 @@ def index():
     #lat = 38.601675
     #lon = -89.992291
     # 67 Ludwig Dr, Fairview Heights, IL 62208
-    clus = model_IL.predict(np.array([latitude,longitude]).reshape(1,-1))[0]
-    print(clus)
-    res = []
+    # clus = model_IL.predict(np.array([latitude,longitude]).reshape(1,-1))[0]
+    # print(clus)
+    # 'cluster' : clus.item(),
+    #     res = []
     best_foods = []
     #all_todos = df_restaurants.find({'state' : state_temp, 'cluster' : clus.item()})
     all_res = df_restaurants.find({
         'state' : state, 
-        'cluster' : clus.item(),
         'loc': {'$near': {
         '$geometry': {
         'type': 'Point' ,
@@ -69,7 +69,7 @@ def index():
     for todo in all_res[0:1]:
         res_id = todo['business_id']
         res_name = todo['name']
-        b_food = []
+        b_food = set()
         #all_5_reviews = df_reviews.find({'business_id' : res_id, 'stars' : 5})
         print("Processing Restaurant...")
         #print(all_5_reviews[0]['text'])
