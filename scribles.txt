@@ -52,3 +52,9 @@ db.yelprestaurants.find(
      }
    }
 })
+
+
+## to load into mongo
+mongoimport --type=csv --headerline --db=bda_yelp --collection=yelprestaurants --file restaurant_kmeans_1.csv
+
+mongoimport --type=csv --headerline --db=bda_yelp --collection=yelpreviews --file restaurant_reviews.csv 
