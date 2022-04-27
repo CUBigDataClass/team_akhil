@@ -23,13 +23,16 @@ df_reviews_IL = db['yelpreviewsIL']
 
 fooditemModel = FoodModel("chambliss/distilbert-for-food-extraction")
 
-latitude = 38.601675
-longitude = -89.992291
-state = 'IL'
+# latitude = 38.601675
+# longitude = -89.992291
+# state = 'IL'
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
-    global latitude, longitude, state
+    #global latitude, longitude, state
+    s_latitude = 38.601675
+    s_longitude = -89.992291
+    state = 'IL'
     URL = "https://maps.googleapis.com/maps/api/geocode/json"
     if request.method=='POST':
         location = request.form['location']
@@ -65,13 +68,16 @@ def index():
         'loc': {'$near': {
         '$geometry': {
         'type': 'Point' ,
-        'coordinates': [ longitude , latitude ]
+        'coordinates': [ s_longitude , s_latitude ]
         },
         }}
         })
     for todo in all_res[0:5]:
+        print(todo)
         res_id = todo['business_id']
         res_name = todo['name']
+        latitude = todo['loc']['coordinates'][1]
+        longitude = todo['loc']['coordinates'][0]
         b_food = set()
         #all_5_reviews = df_reviews.find({'business_id' : res_id, 'stars' : 5})
         print("Processing Restaurant...")
