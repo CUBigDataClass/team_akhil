@@ -11,23 +11,23 @@
             <link rel="stylesheet" href="/assets/css/styles.css">
         </head>
         <body class="text-monospace">
-            <form id="form1" method="post" onsubmit="LoadMap()" style="padding: 5px;margin: -1px;background: url(&quot;https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Funsplash.com%2Fimages%2Ffood&amp;psig=AOvVaw1ZNQ6zugPVFAdvNLqH0NJg&amp;ust=1651094863909000&amp;source=images&amp;cd=vfe&amp;ved=0CAwQjRxqFwoTCKi89ujVsvcCFQAAAAAdAAAAABAD&quot;), url(&quot;assets/img/6c297c27-e367-44ae-8b2a-677408fa9b73.jpg&quot;), var(--yellow);">
+            <form id="form1" method="post" onsubmit="LoadMap()" style="padding: 5px;margin: -1px;">
                 <header></header>
                 <div class="form-group text-monospace font-weight-bold">
                     <h1 style="font-size: 30px;text-align: center;color: var(--white);font-weight: bold;background: var(--gray);">YELP BASED RESTAURANT RECOMMENDATIONS</h1>
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="overflow-x: hidden;">
                         <table class="table">                        
                             <thead>
                                 <tr>
                                     <th>
-                                        <h1 style="font-size: 20px;color: var(--white);background: var(--blue);">Location:
+                                        <h1 style="font-size: 20px;color: var(--black);text-align: center;">Location:
                                         </h1>
                                     </th>
                                     <th>                                        
                                         <input class="form-control" type="text" name="location", for="location" placeholder="Enter Location">
                                     </th>
                                     <th class="text-center">
-                                        <input style="background-color:rgb(0, 140, 255)" type="submit" value="Search for restaurants">
+                                        <input style="" type="submit" value="Search for restaurants">
                                     </th>
                                 </tr>
                             </thead>
@@ -52,7 +52,7 @@
                                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4jChq2-_I4Dc0KSh3VI_OCaCDcG68oq8&callback=initMap&v=weekly" width="100%" height="800" allowfullscreen
                                 type="text/javascript"></script>
                             </td>
-                            <td style="width: 270.781px;">
+                            <td style="width: 270.781px;overflow-x: auto;">
                                 <form data-aos="fade" style="width: 248.781px;height: 409px;color: var(--info);padding-top: 19px;">
                                     <h1 style="font-size: 25px;color: var(--blue);">Restaurants and Recommended Items</h1>
                                     {% for todo in todos %}
@@ -101,18 +101,20 @@
                     var infoWindow = new google.maps.InfoWindow();
                     var latlngbounds = new google.maps.LatLngBounds();
                     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-             
+                    console.log(markers);
                     for (var i = 0; i < markers.length; i++) {
                         var data = markers[i]
                         var myLatlng = new google.maps.LatLng(data.latitude, data.longitude);
+                        console.log(myLatlng);
                         var marker = new google.maps.Marker({
                             position: myLatlng,
                             map: map,
                             title: data.res_name
                         });
+                        
                         (function (marker, data) {
                             google.maps.event.addListener(marker, "click", function (e) {
-                                infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.best_foods + "</div>");
+                                infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.res_name + "</div>");
                                 infoWindow.open(map, marker);
                             });
                         })(marker, data);

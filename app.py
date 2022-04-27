@@ -45,12 +45,18 @@ def index():
             longitude = data['results'][0]['geometry']['location']['lng']
             state = data['results'][0]['formatted_address'][-13:-11]
             formatted_address = data['results'][0]['formatted_address']
+            print("inside")
+            print(state)
+            print("goingout")
         else:
-            latitude = "No input given"
-            longitude = "No input given"
+            latitude = "GG"
+            longitude = "GG"
             formatted_address = "No input given"
         return redirect(url_for('index'))
-
+    if latitude == "GG":
+        latitude = 38.601675
+        longitude = -89.992291
+        state = 'IL'
     #lat = 38.601675
     #lon = -89.992291
     # 67 Ludwig Dr, Fairview Heights, IL 62208
@@ -60,6 +66,7 @@ def index():
     #     res = []
     best_foods = []
     #all_todos = df_restaurants.find({'state' : state_temp, 'cluster' : clus.item()})
+    #print(state)
     all_res = df_restaurants.find({
         'state' : state, 
         'loc': {'$near': {
@@ -70,8 +77,11 @@ def index():
         }}
         })
     for todo in all_res[0:5]:
+        print(todo)
         res_id = todo['business_id']
         res_name = todo['name']
+        r_latitude = todo['loc']['coordinates'][1]
+        r_longitude = todo['loc']['coordinates'][0]
         b_food = set()
         #all_5_reviews = df_reviews.find({'business_id' : res_id, 'stars' : 5})
         print("Processing Restaurant...")
@@ -80,14 +90,17 @@ def index():
         if state == 'IL':
             for r in df_reviews_IL.find({'business_id' : res_id}):
                 best_foods.append({'res_name' : res_name, 
-                    'latitude':latitude, 
-                    'longitude' : longitude, 
+                    'latitude': r_latitude, 
+                    'longitude' : r_longitude, 
                     'best_foods' : r['best_foods']})
                 break
         else:
-            for r in df_reviews.find({'business_id' : res_id, 'stars' : 5}):
+            #all_revs = df_reviews.find({'business_id' : res_id, 'stars' : '5'}).limit(5)
+            #sz = min(10, all_revs.count())
+            for r in df_reviews.find({'business_id' : res_id, 'stars' : '5'}).limit(5):
+                #print(r)
                 foodrecs.append(fooditemModel.extract_foods(r['text']))
-
+            print(foodrecs)
             #foodrecs = fooditemModel.extract_foods(all_5_reviews_list)
             flag = 0
             for i in foodrecs:
@@ -104,8 +117,8 @@ def index():
                     break
 
             best_foods.append({'res_name' : res_name, 
-                'latitude':latitude, 
-                'longitude' : longitude, 
+                'latitude' : r_latitude, 
+                'longitude' : r_longitude, 
                 'best_foods' : list(b_food)})
         print(best_foods)
     return render_template('index.html', todos=best_foods)
