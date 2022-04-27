@@ -17,6 +17,8 @@ model_IL = pickle.load(open('../new_pickles/kmeans_IL.pkl', 'rb'))
 db = client['bda_yelp']
 df_restaurants = db['yelprestaurants']
 df_reviews = db['yelpreviews']
+df_reviews_FL = db['yelpreviewsNewFL']
+df_reviews_IL = db['yelpreviewsNewIL']
 
 fooditemModel = FoodModel("chambliss/distilbert-for-food-extraction")
 
@@ -74,16 +76,43 @@ def index():
         print("Processing Restaurant...")
         #print(all_5_reviews[0]['text'])
         foodrecs = []
-        for r in df_reviews.find({'business_id' : res_id, 'stars' : 5}):
-            foodrecs.append(fooditemModel.extract_foods(r['text']))
+        if state == 'IL':
+            for r in df_reviews_IL.find({'business_id' : res_id}):
+                best_foods.append({'res_name' : res_name, 
+                    'latitude':latitude, 
+                    'longitude' : longitude, 
+                    'best_foods' : r['best_foods']})
+                break
+        elif state == 'FL':
+            for r in df_reviews_FL.find({'business_id' : res_id}):
+                best_foods.append({'res_name' : res_name, 
+                    'latitude':latitude, 
+                    'longitude' : longitude, 
+                    'best_foods' : r['best_foods']})
+                break
+        else:
+            for r in df_reviews.find({'business_id' : res_id, 'stars' : 5}):
+                foodrecs.append(fooditemModel.extract_foods(r['text']))
 
-        #foodrecs = fooditemModel.extract_foods(all_5_reviews_list)
-        for i in foodrecs:
-            for k in i:    
-                for j in k['Ingredient']:
-                    if j['conf'] > 0.95:
-                        b_food.add(j['text'])
-        best_foods.append({res_name : b_food})
+            #foodrecs = fooditemModel.extract_foods(all_5_reviews_list)
+            flag = 0
+            for i in foodrecs:
+                for k in i:    
+                    for j in k['Ingredient']:
+                        if j['conf'] > 0.95:
+                            b_food.add(j['text'])
+                            if len(b_food) == 5:
+                                flag = 1
+                                break
+                    if flag == 1:
+                        break
+                if flag == 1:
+                    break
+
+            best_foods.append({'res_name' : res_name, 
+                'latitude':latitude, 
+                'longitude' : longitude, 
+                'best_foods' : list(b_food)})
         print(best_foods)
     return render_template('index.html', todos=best_foods)
 

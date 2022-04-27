@@ -33,8 +33,8 @@ for todo in range(len(all_res)):
     
     b_food = set()
         #all_5_reviews = df_reviews.find({'business_id' : res_id, 'stars' : 5})
-    print("Processing Restaurant..." + str(count))
-    print(tododo)
+    print("From : " + str(filearg) + " :: Processing Restaurant :" + str(count))
+    #print(tododo)
     #print(all_5_reviews[0]['text'])
     foodrecs = []
     for r in df_reviews.find({'business_id' : res_id, 'stars' : 5}):
