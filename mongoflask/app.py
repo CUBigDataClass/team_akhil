@@ -82,7 +82,7 @@ def index():
             for k in i:    
                 for j in k['Ingredient']:
                     if j['conf'] > 0.95:
-                        b_food.append(j['text'])
+                        b_food.add(j['text'])
         best_foods.append({res_name : b_food})
         print(best_foods)
     return render_template('index.html', todos=best_foods)
